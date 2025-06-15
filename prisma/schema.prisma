@@ -1,0 +1,228 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String
+  role      String
+  department String
+  
+  // Profile customization fields
+  position     String?
+  phone        String?
+  address      String?
+  startDate    String?
+  employeeId   String?
+  shift        String?
+  experience   String?
+  profilePhoto String?  // URL or base64 string
+  bio          String?
+  skills       String?  // JSON string of skills array
+  
+  // Performance metrics
+  efficiency   Float? @default(0)
+  attendance   Float? @default(0)
+  qualityScore Float? @default(0)
+  safetyScore  Float? @default(0)
+  
+  // Achievements and certifications
+  achievements String? // JSON string of achievements array
+  certifications String? // JSON string of certifications array
+  
+  // Preferences
+  theme        String? @default("system")
+  language     String? @default("tr")
+  notifications String? // JSON string of notification preferences
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  maintenanceRequests MaintenanceRequest[]
+  alerts             Alert[]
+  sessions           UserSession[]
+}
+
+model Machine {
+  id            String   @id @default(cuid())
+  name          String
+  type          String   // CNC, INJECTION, ASSEMBLY, PACKAGING
+  status        String   // RUNNING, STOPPED, MAINTENANCE, ERROR
+  temperature   Float    @default(0)
+  vibration     Float    @default(0)
+  speed         Float    @default(0)
+  efficiency    Float    @default(0)
+  lastMaintenance DateTime?
+  nextMaintenance DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  
+  // Relations
+  sensors       Sensor[]
+  alerts        Alert[]
+  maintenanceRequests MaintenanceRequest[]
+  productionRuns ProductionRun[]
+}
+
+model Sensor {
+  id        String   @id @default(cuid())
+  deviceId  String   @unique
+  name      String
+  type      String   // TEMPERATURE, VIBRATION, PRESSURE, SPEED, ENERGY
+  value     Float    @default(0)
+  unit      String
+  status    String   @default("ONLINE") // ONLINE, OFFLINE, CALIBRATING
+  machineId String
+  lastCalibration DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  machine   Machine @relation(fields: [machineId], references: [id], onDelete: Cascade)
+  readings  SensorReading[]
+}
+
+model SensorReading {
+  id        String   @id @default(cuid())
+  sensorId  String
+  value     Float
+  timestamp DateTime @default(now())
+  
+  // Relations
+  sensor    Sensor @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  
+  @@index([sensorId, timestamp])
+}
+
+model Alert {
+  id          String   @id @default(cuid())
+  type        String   // CRITICAL, WARNING, INFO
+  severity    String   // HIGH, MEDIUM, LOW
+  title       String
+  description String
+  machineId   String?
+  userId      String?
+  status      String   @default("ACTIVE") // ACTIVE, ACKNOWLEDGED, RESOLVED
+  createdAt   DateTime @default(now())
+  resolvedAt  DateTime?
+  
+  // Relations
+  machine     Machine? @relation(fields: [machineId], references: [id])
+  user        User?    @relation(fields: [userId], references: [id])
+}
+
+model MaintenanceRequest {
+  id          String   @id @default(cuid())
+  type        String   // PREVENTIVE, CORRECTIVE, EMERGENCY
+  priority    String   // HIGH, MEDIUM, LOW
+  title       String
+  description String
+  machineId   String
+  requestedBy String
+  assignedTo  String?
+  status      String   @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+  scheduledDate DateTime?
+  completedDate DateTime?
+  estimatedCost Float?
+  actualCost    Float?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  machine     Machine @relation(fields: [machineId], references: [id])
+  requester   User    @relation(fields: [requestedBy], references: [id])
+}
+
+model ProductionRun {
+  id           String   @id @default(cuid())
+  machineId    String
+  productName  String
+  batchNumber  String
+  quantity     Int
+  qualityScore Float    @default(0)
+  defectRate   Float    @default(0)
+  energyUsed   Float    @default(0)
+  startTime    DateTime
+  endTime      DateTime?
+  status       String   @default("RUNNING") // RUNNING, COMPLETED, ABORTED
+  
+  // Relations
+  machine      Machine @relation(fields: [machineId], references: [id])
+  qualityTests QualityTest[]
+}
+
+model QualityTest {
+  id             String   @id @default(cuid())
+  productionRunId String
+  testType       String
+  result         String   // PASS, FAIL
+  score          Float
+  defects        String?  // JSON string of defect details
+  testDate       DateTime @default(now())
+  
+  // Relations
+  productionRun  ProductionRun @relation(fields: [productionRunId], references: [id])
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  deviceInfo String?
+  ipAddress String?
+  location  String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  isActive  Boolean  @default(true)
+  
+  // Relations
+  user      User @relation(fields: [userId], references: [id])
+}
+
+model SystemLog {
+  id        String   @id @default(cuid())
+  level     String   // INFO, WARNING, ERROR, CRITICAL
+  module    String
+  action    String
+  details   String?
+  userId    String?
+  timestamp DateTime @default(now())
+}
+
+model EnergyConsumption {
+  id        String   @id @default(cuid())
+  machineId String?
+  facility  String?
+  consumption Float  // kWh
+  cost      Float?
+  carbonFootprint Float?
+  timestamp DateTime @default(now())
+  period    String   // HOURLY, DAILY, WEEKLY, MONTHLY
+}
+
+model Inventory {
+  id          String   @id @default(cuid())
+  partNumber  String   @unique
+  name        String
+  category    String
+  quantity    Int      @default(0)
+  minStock    Int      @default(0)
+  unitCost    Float    @default(0)
+  supplier    String?
+  location    String?
+  lastUpdated DateTime @updatedAt
+}
