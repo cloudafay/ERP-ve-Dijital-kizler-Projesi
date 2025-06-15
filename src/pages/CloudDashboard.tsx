@@ -173,39 +173,43 @@ const CloudDashboard: React.FC = () => {
 
   if (dashboardsLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
-          <p className="text-gray-600">Dashboard'lar yükleniyor...</p>
+          <p className="text-gray-600 dark:text-gray-400">Dashboard'lar yükleniyor...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-6 py-4">
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <Cloud className="w-8 h-8 text-blue-500" />
+              <div className="h-10 w-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                <Cloud className="w-6 h-6 text-white" />
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-900">Bulut Dashboard</h1>
-                <p className="text-sm text-gray-500">Merkezi İzleme ve Analiz Platformu</p>
+                <h1 className="text-2xl font-bold text-gray-900 dark:text-white">Bulut Dashboard</h1>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Merkezi İzleme ve Analiz Platformu</p>
               </div>
             </div>
             
             <div className="flex items-center gap-2">
-              <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
-                isConnected ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+              <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium border ${
+                isConnected 
+                  ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 border-green-200 dark:border-green-700' 
+                  : 'bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 border-red-200 dark:border-red-700'
               }`}>
                 {isConnected ? <Wifi className="w-4 h-4" /> : <WifiOff className="w-4 h-4" />}
                 {isConnected ? 'Bağlı' : 'Bağlantı Yok'}
               </div>
               
               {stats && (
-                <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
                   <div className="flex items-center gap-1">
                     <LayoutGrid className="w-4 h-4" />
                     {stats.totalDashboards} Dashboard
@@ -229,6 +233,7 @@ const CloudDashboard: React.FC = () => {
               size="sm"
               onClick={handleExportDashboard}
               disabled={!currentDashboard}
+              className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               <Download className="w-4 h-4 mr-2" />
               Dışa Aktar
@@ -239,6 +244,7 @@ const CloudDashboard: React.FC = () => {
               size="sm"
               onClick={() => setIsEditing(!isEditing)}
               disabled={!currentDashboard}
+              className="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {isEditing ? (
                 <>
@@ -255,23 +261,23 @@ const CloudDashboard: React.FC = () => {
 
             <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
               <DialogTrigger asChild>
-                <Button size="sm">
+                <Button size="sm" className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
                   <Plus className="w-4 h-4 mr-2" />
                   Yeni Dashboard
                 </Button>
               </DialogTrigger>
-              <DialogContent>
+              <DialogContent className="dark:bg-gray-800 dark:border-gray-700">
                 <DialogHeader>
-                  <DialogTitle>Yeni Dashboard Oluştur</DialogTitle>
+                  <DialogTitle className="dark:text-white">Yeni Dashboard Oluştur</DialogTitle>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <Input placeholder="Dashboard adı" />
-                  <Input placeholder="Açıklama" />
+                  <Input placeholder="Dashboard adı" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
+                  <Input placeholder="Açıklama" className="dark:bg-gray-700 dark:border-gray-600 dark:text-white" />
                   <div className="flex gap-2">
                     <Button onClick={() => setShowCreateDialog(false)}>
                       Oluştur
                     </Button>
-                    <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
+                    <Button variant="outline" onClick={() => setShowCreateDialog(false)} className="dark:border-gray-600 dark:text-gray-300">
                       İptal
                     </Button>
                   </div>
@@ -284,29 +290,29 @@ const CloudDashboard: React.FC = () => {
 
       <div className="flex h-[calc(100vh-5rem)]">
         {/* Sidebar */}
-        <div className="w-80 bg-white border-r border-gray-200 flex flex-col">
+        <div className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
           {/* Search and Filter */}
-          <div className="p-4 border-b border-gray-200">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="space-y-3">
               <div className="relative">
-                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500" />
                 <Input
                   placeholder="Dashboard ara..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:placeholder-gray-400"
                 />
               </div>
               
               <Select value={filterTag} onValueChange={setFilterTag}>
-                <SelectTrigger>
+                <SelectTrigger className="dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                   <Filter className="w-4 h-4 mr-2" />
                   <SelectValue placeholder="Etiket filtrele" />
                 </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tüm Etiketler</SelectItem>
+                <SelectContent className="dark:bg-gray-700 dark:border-gray-600">
+                  <SelectItem value="all" className="dark:text-white dark:hover:bg-gray-600">Tüm Etiketler</SelectItem>
                   {allTags.map(tag => (
-                    <SelectItem key={tag} value={tag}>
+                    <SelectItem key={tag} value={tag} className="dark:text-white dark:hover:bg-gray-600">
                       {tag}
                     </SelectItem>
                   ))}
@@ -325,25 +331,25 @@ const CloudDashboard: React.FC = () => {
                   animate={{ opacity: 1, x: 0 }}
                   className={`p-3 rounded-lg border cursor-pointer transition-all ${
                     selectedDashboard === dashboard.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
+                      ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20 dark:border-blue-400'
+                      : 'border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                   }`}
                   onClick={() => setSelectedDashboard(dashboard.id)}
                 >
                   <div className="flex items-start justify-between">
                     <div className="flex-1">
-                      <h3 className="font-medium text-gray-900">{dashboard.name}</h3>
-                      <p className="text-sm text-gray-500 mt-1">{dashboard.description}</p>
+                      <h3 className="font-medium text-gray-900 dark:text-white">{dashboard.name}</h3>
+                      <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">{dashboard.description}</p>
                       
                       <div className="flex items-center gap-2 mt-2">
                         <div className="flex flex-wrap gap-1">
                           {dashboard.tags.slice(0, 2).map(tag => (
-                            <Badge key={tag} variant="secondary" className="text-xs">
+                            <Badge key={tag} variant="secondary" className="text-xs dark:bg-gray-700 dark:text-gray-300">
                               {tag}
                             </Badge>
                           ))}
                           {dashboard.tags.length > 2 && (
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-xs dark:border-gray-600 dark:text-gray-400">
                               +{dashboard.tags.length - 2}
                             </Badge>
                           )}
@@ -351,7 +357,7 @@ const CloudDashboard: React.FC = () => {
                       </div>
                     </div>
                     
-                    <div className="text-xs text-gray-400">
+                    <div className="text-xs text-gray-400 dark:text-gray-500">
                       {dashboard.widgets.length} widget
                     </div>
                   </div>
@@ -362,12 +368,12 @@ const CloudDashboard: React.FC = () => {
         </div>
 
         {/* Main Content */}
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-hidden bg-gray-50 dark:bg-gray-900">
           {dashboardLoading ? (
             <div className="h-full flex items-center justify-center">
               <div className="text-center">
                 <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-500" />
-                <p className="text-gray-600">Dashboard yükleniyor...</p>
+                <p className="text-gray-600 dark:text-gray-400">Dashboard yükleniyor...</p>
               </div>
             </div>
           ) : currentDashboard ? (
@@ -376,16 +382,16 @@ const CloudDashboard: React.FC = () => {
               <div className="mb-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <h2 className="text-2xl font-bold text-gray-900">{currentDashboard.name}</h2>
-                    <p className="text-gray-600">{currentDashboard.description}</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{currentDashboard.name}</h2>
+                    <p className="text-gray-600 dark:text-gray-400">{currentDashboard.description}</p>
                   </div>
                   
                   <div className="flex items-center gap-2">
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="dark:border-gray-600 dark:text-gray-400">
                       Son güncelleme: {new Date(currentDashboard.updatedAt).toLocaleString('tr-TR')}
                     </Badge>
                     {isEditing && (
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="dark:bg-gray-700 dark:text-gray-300">
                         Düzenleme Modu
                       </Badge>
                     )}
@@ -394,18 +400,20 @@ const CloudDashboard: React.FC = () => {
               </div>
 
               {/* Widgets Grid */}
-              <div className="h-[calc(100%-8rem)]">
+              <div className="h-[calc(100%-8rem)] overflow-auto">
                 <ResponsiveGridLayout
                   className="layout"
                   layouts={layouts}
                   onLayoutChange={handleLayoutChange}
                   breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                   cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                  rowHeight={60}
+                  rowHeight={120}
                   isDraggable={isEditing}
                   isResizable={isEditing}
-                  margin={[16, 16]}
-                  containerPadding={[0, 0]}
+                  margin={[20, 20]}
+                  containerPadding={[20, 20]}
+                  compactType="vertical"
+                  preventCollision={false}
                 >
                   {currentDashboard.widgets.map(widget => (
                     <div
@@ -415,9 +423,12 @@ const CloudDashboard: React.FC = () => {
                         y: widget.position.y,
                         w: widget.position.w,
                         h: widget.position.h,
-                        minW: 2,
-                        minH: 2
+                        minW: 3,
+                        minH: 3,
+                        maxW: 12,
+                        maxH: 8
                       }}
+                      className="transition-all duration-200"
                     >
                       <DashboardWidget
                         widget={widget}
@@ -433,9 +444,9 @@ const CloudDashboard: React.FC = () => {
           ) : (
             <div className="h-full flex items-center justify-center">
               <div className="text-center">
-                <LayoutGrid className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                <h3 className="text-xl font-medium text-gray-900 mb-2">Dashboard Seçin</h3>
-                <p className="text-gray-600">Görüntülemek için sol panelden bir dashboard seçin</p>
+                <LayoutGrid className="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
+                <h3 className="text-xl font-medium text-gray-900 dark:text-white mb-2">Dashboard Seçin</h3>
+                <p className="text-gray-600 dark:text-gray-400">Görüntülemek için sol panelden bir dashboard seçin</p>
               </div>
             </div>
           )}

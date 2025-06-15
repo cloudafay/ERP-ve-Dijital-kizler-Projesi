@@ -93,7 +93,21 @@ const Index = () => {
       setCloudDashboards(dashboards);
       
       if (dashboards.length > 0) {
-        setCurrentDashboard(dashboards[0]);
+        const dashboard = dashboards[0];
+        // Widget'lara varsayılan pozisyon ver
+        const dashboardWithPositions = {
+          ...dashboard,
+          widgets: dashboard.widgets.map((widget, index) => ({
+            ...widget,
+            position: widget.position || {
+              x: (index % 3) * 4,
+              y: Math.floor(index / 3) * 4,
+              w: 4,
+              h: 4
+            }
+          }))
+        };
+        setCurrentDashboard(dashboardWithPositions);
       }
     };
     
@@ -407,26 +421,214 @@ const Index = () => {
                   </div>
 
                   {/* Dashboard Grid */}
-                  {currentDashboard && currentDashboard.widgets && (
-                    <div className="min-h-[600px]">
+                  {currentDashboard && currentDashboard.widgets && currentDashboard.widgets.length > 0 ? (
+                    <div className="min-h-[800px] bg-gray-50 dark:bg-gray-900 rounded-xl p-6">
                       <ResponsiveGridLayout
                         className="layout"
                         layouts={layouts}
                         onLayoutChange={(layout, layouts) => setLayouts(layouts)}
                         breakpoints={{ lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0 }}
                         cols={{ lg: 12, md: 10, sm: 6, xs: 4, xxs: 2 }}
-                        rowHeight={60}
+                        rowHeight={150}
                         isDraggable={isEditing}
                         isResizable={isEditing}
-                        margin={[16, 16]}
-                        containerPadding={[0, 0]}
+                        margin={[24, 24]}
+                        containerPadding={[24, 24]}
+                        compactType="vertical"
+                        preventCollision={false}
                       >
                         {currentDashboard.widgets.map((widget: any) => (
-                          <div key={widget.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+                          <div 
+                            key={widget.id} 
+                            data-grid={{
+                              x: widget.position?.x || 0,
+                              y: widget.position?.y || 0,
+                              w: widget.position?.w || 4,
+                              h: widget.position?.h || 4,
+                              minW: 3,
+                              minH: 3,
+                              maxW: 12,
+                              maxH: 8
+                            }}
+                            className="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 overflow-hidden transition-all duration-200 hover:shadow-xl"
+                          >
                             <DashboardWidget widget={widget} />
                           </div>
                         ))}
                       </ResponsiveGridLayout>
+                    </div>
+                  ) : (
+                    <div className="min-h-[800px] bg-gray-50 dark:bg-gray-900 rounded-xl p-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full">
+                        {/* Demo Widget 1 - Üretim */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                                <Factory className="h-4 w-4 text-white" />
+                              </div>
+                              Üretim Hızı
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-green-600 dark:text-green-400">
+                                1,247
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Adet/Saat
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <TrendingUp className="h-4 w-4 text-green-500" />
+                                <span className="text-green-600 dark:text-green-400">+12.5%</span>
+                                <span className="text-gray-500 dark:text-gray-400">bu hafta</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Demo Widget 2 - Kalite */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                                <CheckCircle className="h-4 w-4 text-white" />
+                              </div>
+                              Kalite Skoru
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                                94.8%
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Geçen Ay: 92.1%
+                              </div>
+                              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                                <div className="bg-blue-500 h-2 rounded-full" style={{ width: '94.8%' }}></div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Demo Widget 3 - Enerji */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center">
+                                <Zap className="h-4 w-4 text-white" />
+                              </div>
+                              Enerji Tüketimi
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-orange-600 dark:text-orange-400">
+                                847 kW
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Anlık Tüketim
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <Activity className="h-4 w-4 text-orange-500" />
+                                <span className="text-orange-600 dark:text-orange-400">Normal Seviye</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Demo Widget 4 - Makine Durumu */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                                <Settings className="h-4 w-4 text-white" />
+                              </div>
+                              Aktif Makineler
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                                12/15
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Çalışan/Toplam
+                              </div>
+                              <div className="flex gap-2">
+                                <Badge className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400">
+                                  10 Aktif
+                                </Badge>
+                                <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400">
+                                  2 Bakım
+                                </Badge>
+                                <Badge className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400">
+                                  3 Durduruldu
+                                </Badge>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Demo Widget 5 - Performans */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                                <BarChart3 className="h-4 w-4 text-white" />
+                              </div>
+                              OEE Skoru
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                                87.3%
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Hedef: 85%
+                              </div>
+                              <div className="flex items-center gap-2 text-sm">
+                                <Sparkles className="h-4 w-4 text-indigo-500" />
+                                <span className="text-indigo-600 dark:text-indigo-400">Hedefin Üzerinde</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+
+                        {/* Demo Widget 6 - Uyarılar */}
+                        <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 h-64">
+                          <CardHeader className="pb-3">
+                            <CardTitle className="flex items-center gap-2 text-gray-900 dark:text-white text-lg">
+                              <div className="h-8 w-8 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center">
+                                <AlertTriangle className="h-4 w-4 text-white" />
+                              </div>
+                              Sistem Uyarıları
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent>
+                            <div className="space-y-4">
+                              <div className="text-3xl font-bold text-red-600 dark:text-red-400">
+                                3
+                              </div>
+                              <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Aktif Uyarı
+                              </div>
+                              <div className="space-y-2">
+                                <div className="flex items-center gap-2 text-sm">
+                                  <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                                  <span className="text-gray-700 dark:text-gray-300">Sıcaklık Yüksek</span>
+                                </div>
+                                <div className="flex items-center gap-2 text-sm">
+                                  <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
+                                  <span className="text-gray-700 dark:text-gray-300">Bakım Gerekli</span>
+                                </div>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
                     </div>
                   )}
 

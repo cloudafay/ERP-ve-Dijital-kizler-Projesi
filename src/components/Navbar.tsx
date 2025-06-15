@@ -215,10 +215,7 @@ const Navbar: React.FC<NavbarProps> = ({ onMenuClick, sidebarOpen = false }) => 
               {/* Sağ Taraf - Aksiyonlar */}
               <div className="flex items-center space-x-2">
                 
-                {/* Tam Ekran */}
-                <button className="hidden lg:flex p-2 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-all duration-200">
-                  <Maximize2 className="h-4 w-4" />
-                </button>
+
 
                 {/* Tema Değiştirici */}
                 <button 

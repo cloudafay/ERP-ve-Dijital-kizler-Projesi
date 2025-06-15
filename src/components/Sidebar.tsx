@@ -23,12 +23,8 @@ import {
   ArrowRight,
   Monitor,
   TrendingUp,
-  Bell,
   Calendar,
   FileText,
-  HelpCircle,
-  LogOut,
-  Search,
   Star,
   Download,
   Upload,
@@ -150,7 +146,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
 
   const handleMenuClick = (tabValue: string) => {
     const mainModules = [
-      'overview', 'production', 'production-performance', 'ai-dashboard', 'iot-monitor', 
+      'overview', 'production', 'ai-dashboard', 'iot-monitor', 
       'plc-dashboard', 'edge-energy', 'cloud-dashboard'
     ];
     
@@ -199,19 +195,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
       gradientFrom: 'from-green-500',
       gradientTo: 'to-green-600'
     },
-    { 
-      id: 'production-performance', 
-      name: 'Üretim Performansı', 
-      pageTitle: 'Performans Analizi ve Metrikler',
-      icon: TrendingUp, 
-      count: null,
-      description: 'Üretim verimliliği ve performans takibi',
-      destination: 'Performans Sekmesi',
-      color: 'text-emerald-600',
-      bgColor: 'bg-emerald-50',
-      gradientFrom: 'from-emerald-500',
-      gradientTo: 'to-emerald-600'
-    },
+
     { 
       id: 'ai-dashboard', 
       name: 'AI Analizi', 
@@ -284,7 +268,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
       id: 'alerts', 
       name: 'Sistem Uyarıları', 
       pageTitle: 'Uyarı ve Bildirim Merkezi',
-      icon: Bell, 
+      icon: AlertTriangle, 
       count: unreadAlerts,
       description: 'Kritik sistem bildirimleri',
       destination: '/alerts',
@@ -373,12 +357,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
     }
   ];
 
-  const quickActions = [
-    { id: 'search', name: 'Arama', icon: Search, color: 'text-blue-500' },
-    { id: 'notifications', name: 'Bildirimler', icon: Bell, color: 'text-yellow-500', count: unreadAlerts },
-    { id: 'help', name: 'Yardım', icon: HelpCircle, color: 'text-green-500' },
-    { id: 'logout', name: 'Çıkış', icon: LogOut, color: 'text-red-500' }
-  ];
+
 
   // Dinamik genişlik hesaplama
   const shouldExpand = isOpen || isHovered;
@@ -435,30 +414,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
           )}
         </div>
 
-        {/* Quick Actions Bar */}
-        {shouldExpand && (
-          <div className={`flex-shrink-0 px-4 py-3 bg-gradient-to-r from-gray-50/50 to-gray-100/50 dark:from-gray-800/50 dark:to-gray-700/50 border-b border-gray-200/30 dark:border-gray-700/30 transition-all duration-500 ${shouldExpand ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
-            <div className="flex items-center justify-between">
-              {quickActions.map((action) => {
-                const Icon = action.icon;
-                return (
-                  <button
-                    key={action.id}
-                    className="relative p-2 rounded-xl hover:bg-white/80 dark:hover:bg-gray-600/80 transition-all duration-200 group"
-                    title={action.name}
-                  >
-                    <Icon className={`h-5 w-5 ${action.color} group-hover:scale-110 transition-transform`} />
-                    {action.count && action.count > 0 && (
-                      <span className="absolute -top-1 -right-1 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center font-bold">
-                        {action.count > 9 ? '9+' : action.count}
-                      </span>
-                    )}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-        )}
+
 
         {/* Scrollable Content Area */}
         <div className="flex-1 relative min-h-0">
