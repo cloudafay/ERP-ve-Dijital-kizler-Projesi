@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BackToHomeButton from '../components/BackToHomeButton';
+import { GDPRComplianceDashboard } from '../components/GDPRComplianceDashboard';
 
 const SecurityPage: React.FC = () => {
   const [showPasswords, setShowPasswords] = useState(false);
@@ -613,6 +614,19 @@ const SecurityPage: React.FC = () => {
               ))}
             </div>
           </div>
+        </div>
+        
+        {/* GDPR Uyumluluk Dashboard */}
+        <div style={{
+          background: 'rgba(255, 255, 255, 0.7)',
+          backdropFilter: 'blur(10px)',
+          borderRadius: '16px',
+          padding: '24px',
+          marginTop: '24px',
+          border: '1px solid rgba(255, 255, 255, 0.5)',
+          boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+        }}>
+          <GDPRComplianceDashboard />
         </div>
       </div>
     </div>

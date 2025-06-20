@@ -1,4 +1,5 @@
 import { SensorData, MachineStatus, useDigitalTwinStore } from './store';
+import { dataValidationService } from './dataValidation';
 
 export interface IoTDevice {
   id: string;
@@ -394,13 +395,57 @@ export class IoTSimulator {
         return;
       }
 
-      // Veriyi store'a ekle
-      addSensorData({
+      // Sensör veri objesi oluştur
+      const sensorData = {
+        id: crypto.randomUUID(),
+        deviceId: device.id,
         machineId: device.machineId,
-        sensorType: device.type,
+        type: device.type,
         value: Math.round(value * 100) / 100,
         unit,
-        status
+        timestamp: new Date(),
+        quality: status === 'normal' ? 'good' as const : 
+                status === 'warning' ? 'poor' as const : 'bad' as const,
+        validated: false,
+        calibrationOffset: 0,
+      };
+
+      // Veri doğrulama gerçekleştir
+      dataValidationService.validateRawData(sensorData).then(validationResult => {
+        // Doğrulama sonucuna göre veriyi işaretle
+        const processedData = {
+          ...sensorData,
+          validated: validationResult.isValid,
+          quality: validationResult.isValid ? sensorData.quality : 'bad' as const,
+        };
+
+        // Geçmiş verilere ekle
+        if (validationResult.isValid) {
+          dataValidationService.addHistoricalData(processedData);
+        }
+
+        // Store'a ekle (eski format ile uyumluluk için)
+        const storeFormat = device.type === 'flow' ? 'speed' : 
+                           device.type === 'humidity' ? 'energy' : device.type;
+        
+        addSensorData({
+          machineId: device.machineId,
+          sensorType: storeFormat as any,
+          value: processedData.value,
+          unit,
+          status
+        });
+      }).catch(error => {
+        console.error('Validation error:', error);
+        // Hata durumunda da veriyi ekle ama işaretli olarak
+        addSensorData({
+          machineId: device.machineId,
+          sensorType: device.type === 'flow' ? 'speed' : 
+                     device.type === 'humidity' ? 'energy' : device.type as any,
+          value: Math.round(value * 100) / 100,
+          unit,
+          status: 'critical'
+        });
       });
 
       // MQTT benzeri mesaj simülasyonu

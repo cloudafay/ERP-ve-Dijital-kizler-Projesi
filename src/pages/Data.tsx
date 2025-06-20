@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import BackToHomeButton from '../components/BackToHomeButton';
+import { ExternalApiDashboard } from '../components/ExternalApiDashboard';
 
 const DataPage: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState('overview');
@@ -297,7 +298,8 @@ const DataPage: React.FC = () => {
             { id: 'databases', label: 'Veritabanları', icon: '💾' },
             { id: 'backups', label: 'Yedeklemeler', icon: '🔄' },
             { id: 'retention', label: 'Saklama Politikaları', icon: '📅' },
-            { id: 'quality', label: 'Veri Kalitesi', icon: '✅' }
+            { id: 'quality', label: 'Veri Kalitesi', icon: '✅' },
+            { id: 'external-api', label: 'Harici API', icon: '🔗' }
           ].map((tab) => (
             <button
               key={tab.id}
@@ -903,6 +905,19 @@ const DataPage: React.FC = () => {
                 </div>
               ))}
             </div>
+          </div>
+        )}
+
+        {selectedTab === 'external-api' && (
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.7)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '16px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.5)',
+            boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1)'
+          }}>
+            <ExternalApiDashboard />
           </div>
         )}
       </div>
