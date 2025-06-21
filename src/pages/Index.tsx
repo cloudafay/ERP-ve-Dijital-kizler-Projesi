@@ -8,6 +8,7 @@ import AlertsPanel from '../components/AlertsPanel';
 import PerformanceTable from '../components/PerformanceTable';
 import DigitalTwin3D from '../components/DigitalTwin3D';
 import AIDashboard from '../components/AIDashboard';
+import OnlineLearningDashboard from '../components/OnlineLearningDashboard';
 import IoTMonitor from '../components/IoTMonitor';
 import DataStreamPanel from '../components/DataStreamPanel';
 import PLCDashboard from './PLCDashboard';
@@ -359,8 +360,14 @@ const Index = () => {
                 </TabsContent>
 
                 {/* AI Dashboard */}
-                <TabsContent value="ai-dashboard" className="mt-0">
+                <TabsContent value="ai-dashboard" className="mt-0 space-y-6">
+                  {/* Original AI Dashboard */}
                   <AIDashboard />
+                  
+                  {/* Online Learning Dashboard */}
+                  <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                    <OnlineLearningDashboard />
+                  </div>
                 </TabsContent>
 
                 {/* IoT Monitor */}

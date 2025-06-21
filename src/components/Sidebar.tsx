@@ -156,6 +156,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
       }
     } else {
       const managementPages = ['alerts', 'reports', 'maintenance', 'quality', 'users', 'data', 'settings'];
+      
       if (managementPages.includes(tabValue)) {
         const path = tabValue === 'settings' ? '/system-settings' : `/${tabValue}`;
         window.location.href = path;
@@ -199,10 +200,10 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
     { 
       id: 'ai-dashboard', 
       name: 'AI Analizi', 
-      pageTitle: 'Yapay Zeka Dashboard',
+      pageTitle: 'Yapay Zeka Dashboard + Online Learning',
       icon: Brain, 
       count: null,
-      description: 'Makine öğrenmesi ve tahminler',
+      description: 'Makine öğrenmesi, tahminler ve sürekli öğrenen modeller',
       destination: 'AI Analiz Sekmesi',
       color: 'text-purple-600',
       bgColor: 'bg-purple-50',
@@ -262,6 +263,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
       gradientTo: 'to-sky-600'
     }
   ];
+
+  // Online Learning artık AI Dashboard sekmesinde entegre, ayrı link gerekmiyor
 
   const managementItems = [
     { 
@@ -656,6 +659,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose, activeTab = 'overvie
                 </div>
               )}
             </div>
+
+
           </div>
         </div>
 
